@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json())
 require("dotenv").config();
-
+const cors = require("cors");
 const port = process.env.PORT || 5000
 
 const connectToDatabase = require("./config/db")
@@ -22,12 +22,16 @@ app.use("/api/doctor", doctorsRoutes)
 //       res.sendFile(path.resolve(__dirname, "/client/build/index.html"));
 //     });
 //   }
-if (process.env.NODE_ENV === 'production') {
-    //*Set static folder up in production
-    app.use(express.static('client/build'));
+app.use(cors({
+  origin: "https://edocquick-zaph.onrender.com", // Replace with your frontend URL
+  credentials: true
+}));
+// if (process.env.NODE_ENV === 'production') {
+//     //*Set static folder up in production
+//     app.use(express.static('client/build'));
 
-    app.get('*', (req,res) => res.sendFile(path.resolve(__dirname, 'client', 'build','index.html')));
-  }
+//     app.get('*', (req,res) => res.sendFile(path.resolve(__dirname, 'client', 'build','index.html')));
+//   }
 //middleware for handling errors
 app.use((error, req,res, next)=>{
         res.status(500).json({
